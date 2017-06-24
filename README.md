@@ -18,3 +18,7 @@ This is the perceptron algorithm. It is a supervised learning and feedforward re
 #### Code
 
 This code contains an example of how to setup and use the algorithm. It takes in some sequence patterns for binary values and outputs the inverse result, i.e. a 'zero' input would output a 'fifteen'. Only a handful of patterns are trained and once trained,  an untrained pattern is tested. The number of input and output neurons were purposely chosen to be different for this example.
+
+#### Basic Perceptron Map
+
+![alt text](./basic_perceptron.gif)
