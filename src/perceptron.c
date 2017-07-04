@@ -21,7 +21,7 @@ static uint32_t outputs    = 1;
 * @param [in] neurons the number of neurons for the input layer
 * @details Sets the input layer of neurons
 */
-void setInputNeurons(const int32_t neurons) {
+void setInputNeurons(const uint32_t neurons) {
   inputs = neurons;
 }
 
@@ -30,7 +30,7 @@ void setInputNeurons(const int32_t neurons) {
 * @param [in] neurons the number of neurons for the output layer
 * @details Sets the output layer of neurons
 */
-void setOutputNeurons(const int32_t neurons) {
+void setOutputNeurons(const uint32_t neurons) {
   outputs = neurons;
 }
 
@@ -49,7 +49,7 @@ void setlearningRate(const double learningRateValue) {
 * @param [in] outputs the number of output neurons (Fb)
 * @details Initialize the inter-layer connections and threshold values to values between [1, -1].
 */
-void initializeWeights() {
+void initializeWeights(void) {
   uint32_t row;
   uint32_t column;
 

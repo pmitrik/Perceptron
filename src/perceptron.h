@@ -15,10 +15,10 @@
 extern "C" {
 #endif
 
-void setInputNeurons(const int32_t neurons);
-void setOutputNeurons(const int32_t neurons);
+void setInputNeurons(const uint32_t neurons);
+void setOutputNeurons(const uint32_t neurons);
 void setlearningRate(const double learningRateValue);
-void initializeWeights();
+void initializeWeights(void);
 int32_t * calculateActivationValue(const int32_t *pInputValues);
 uint32_t trainingOutput(const int32_t *pInputValues, const int32_t *pActualOutput, const int32_t *pDesiredOutput);
 void finish(void);
