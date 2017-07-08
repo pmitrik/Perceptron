@@ -19,6 +19,9 @@ This is the perceptron algorithm. It is a supervised learning and feedforward re
 
 This code contains an example of how to setup and use the algorithm. It takes in some sequence patterns for binary values and outputs the inverse result, i.e. a 'zero' input would output a 'fifteen'. Only a handful of patterns are trained and once trained,  an untrained pattern is tested. The number of input and output neurons were purposely chosen to be different for this example. It may be compiled simply using this **<i>gcc example.c perceptron.c -o example.out</i>**. (Of course, warnings may be enabled.)
 
+###### Kernel Module
+Created a kernel module example for no good reason other than to try it. Converted the floating variables into integer values by multiplying them by 1000.  This is a work-in-progress. Expanded the output neurons to 6 and the input neurons to 7. The training set is larger, but not sufficient enough for some cases that were tried. Building the code is simply **<i>make</i>**. The module can be manually inserted by **<i>sudo insmod perceptron_module.ko</i>**. Removing the module is simply **<i>sudo rmmod perceptron_module.ko</i>**. Once the module is loaded, it will run through the training set. In order to test the trained perceptron run **<i>echo "-1,1,1,1,1,1,1" > /dev/perceptron</i>**. The result can be viewed with **<i>cat /sys/module/perceptron_module/parameters/outputArray</i>**.
+
 #### Basic Perceptron Map
 
 ![alt text](./basic_perceptron.gif)
