@@ -1,16 +1,19 @@
 CC=gcc
-CFLAGS=-I.
+INCLUDES = -I.
+CFLAGS= -Wall -g
 DEPS = perceptron.h
 OBJS = example.o perceptron.o 
 MAIN = perceptron
+LFLAGS =
+LIBS =
 
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 all:	$(MAIN)
 
 $(MAIN): $(OBJS)
-	gcc -o $@ $^ $(CFLAGS)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LFLAGS) $(LIBS)
 
 .PHONY: clean
 
