@@ -4,11 +4,12 @@
 #include <linux/kernel.h>
 #include <linux/miscdevice.h>
 #include <linux/fs.h>
-#include <asm/uaccess.h>
+#include <linux/uaccess.h>
 #include <linux/mutex.h>
 
 #include <linux/slab.h>
 #include <linux/string.h>
+
 
 #include "perceptron.h"
 
