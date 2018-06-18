@@ -1,8 +1,8 @@
-CC=gcc
+CC = gcc
 INCLUDES = -I.
-CFLAGS= -Wall -g
+CFLAGS = -Wall -g
 DEPS = perceptron.h
-OBJS = example.o perceptron.o 
+OBJS = example.o perceptron.o
 MAIN = perceptron
 LFLAGS =
 LIBS =
@@ -19,4 +19,3 @@ $(MAIN): $(OBJS)
 
 clean:
 	rm -f *.o *~ core $(MAIN)
-
