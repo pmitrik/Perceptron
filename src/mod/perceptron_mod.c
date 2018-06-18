@@ -44,6 +44,10 @@ static u32 loops;
 static u32 input;
 static u32 output;
 
+static int write_count;
+static int read_count;
+
+
 // Some training data
 static s32 inputValues[28][7] = {
   {-1, -1, -1, -1, -1, -1, -1}, // 0
@@ -127,8 +131,8 @@ static s32 toString(const char *a) {
 
   // Calculate number
   for (c = offset; (a[c] != '\0') && (a[c] >= '0') && (a[c] <= '9'); c++) {
-    number = number * 10 + a[c] - '0';
-    printk(KERN_INFO "Perceptron: number = %d  ---  a[c] = %d\n", number, a[c]);
+    number = (number * 10) + a[c] - '0';
+    printk(KERN_INFO "Perceptron: number = %d", (sign * number));
   }
 
   if (-1 == sign) {
@@ -142,14 +146,14 @@ static s32 toString(const char *a) {
 
 static int perceptron_open(struct inode * inode, struct file * file)
 {
-    printk(KERN_INFO "Perceptron: open\n");
+    printk(KERN_INFO "Perceptron: open");
 
     return 0;
 }
 
 static int perceptron_release(struct inode * inode, struct file * file)
 {
-    printk(KERN_INFO "Perceptron: release\n");
+    printk(KERN_INFO "Perceptron: release");
 
     return 0;
 }
@@ -159,18 +163,9 @@ static int perceptron_release(struct inode * inode, struct file * file)
 */
 static ssize_t perceptron_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
 {
-	char xyz_buf[100];
-	int rc;
-
-	printk("Perceptron: read\n");
-
-	rc = copy_to_user(buf, xyz_buf, count);
-	if(rc < 0) {
-		printk(KERN_INFO "Perceptron: copy to user failed in read\n");
-	}
-    printk(KERN_INFO "Perceptron: read count = %d\n", (int) count);
-
-	return count;
+    printk(KERN_INFO "Perceptron: read");
+    printk(KERN_ALERT "Perceptron: Sorry, this operation isn't supported.");
+    return -EINVAL;
 }
 
 /**
@@ -184,15 +179,13 @@ static ssize_t perceptron_write(struct file *file, const char __user *buf, size_
     s32 number[10];
     u32 column;
 
-//    char *space = "space\0";
-//    char *null  = "NULL\0";
+	printk(KERN_INFO "Perceptron: write");
 
-	printk(KERN_INFO "Perceptron: write\n");
-
-	if (copy_from_user(unused_buf, buf, count)) {
+	if (0 != copy_from_user(unused_buf, buf, count)) {
 		return -EFAULT;
 	}
-//    printk(KERN_INFO "Perceptron: write count = %d\n", (int) count);
+    printk(KERN_INFO "Perceptron: write offset = %d", (int) *ppos);
+//    printk(KERN_INFO "Perceptron: write count = %d", (int) count);
 
     buffer = kmalloc(sizeof(unused_buf), GFP_USER);
     strcpy(buffer, unused_buf);
@@ -200,13 +193,8 @@ static ssize_t perceptron_write(struct file *file, const char __user *buf, size_
     do {
         ptr = strsep(&buffer, ",");
 
-//        printk(KERN_INFO "Perceptron: buffer = %s\n", buffer);
-//        printk(KERN_INFO "Perceptron: ptr = %s\n", (' ' != *ptr) ? ((NULL != ptr) ? ptr : null) : space);
-
         if ((NULL != ptr) && (' ' != *ptr)) {
             number[column] = toString(ptr);
-//            printk(KERN_INFO "Perceptron: number = %d\n", number[column]);
-
             column++;
         }
     } while ((NULL != buffer) && (column < input));
@@ -216,8 +204,10 @@ static ssize_t perceptron_write(struct file *file, const char __user *buf, size_
     pActualResult = calculateActivationValue(&number[0]);
     for (column = 0; column < output; column++) {
         outputArray[column] = pActualResult[column];
-//        printk(KERN_INFO "Perceptron: result[%d] = %d\n", column, pActualResult[column]);
+        printk(KERN_INFO "Perceptron: result[%d] = %d", column, pActualResult[column]);
     }
+
+    write_count = output;
 
 	return count;
 }
@@ -245,14 +235,16 @@ static int __init module_init_callback(void)
 {
 	int retval = 0;
 
-    printk(KERN_ALERT "Perceptron: Initializing driver\n");
+    printk(KERN_ALERT "Perceptron: Initializing driver");
 
     mutex_lock(&perceptron_mutex);
 
     retval = misc_register(&perceptron_dev);
     if (!retval) {
+        write_count = 0;
+        read_count = 0;
 
-        printk(KERN_ALERT "Perceptron: start training\n");
+        printk(KERN_ALERT "Perceptron: start training");
 
         input    = input_neurons;
         output   = output_neurons;
@@ -274,10 +266,10 @@ static int __init module_init_callback(void)
               training += trainingOutput(&inputValues[trainingSets][0], &pActualResult[0], &desiredValues[trainingSets][0]);
             }
             loops++;
-            printk(KERN_INFO "Perceptron: training set loop %d finished!!!\n", loops);
+            printk(KERN_INFO "Perceptron: training set loop %d finished!!!", loops);
         } while (training);
 
-        printk(KERN_INFO "Perceptron: training finished!!!\n");
+        printk(KERN_INFO "Perceptron: training finished!!!");
     }
 
 	return retval;
@@ -285,11 +277,11 @@ static int __init module_init_callback(void)
 
 static void __exit module_exit_callback(void)
 {
+    printk(KERN_ALERT "Perceptron: Exiting driver");
+
     finish();
     misc_deregister(&perceptron_dev);
     mutex_unlock(&perceptron_mutex);
-
-	printk(KERN_ALERT "Perceptron: Exiting driver\n");
 }
 
 MODULE_DESCRIPTION("Perceptron driver");
